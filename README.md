@@ -32,18 +32,6 @@ $ npm start
 - Node.js 8.x
 - Typescript 2.8+
 
-## 基础操作复习
-
-技术方案设计 - 接口设计
-
-1. 需求分析
-2. 功能拆分
-
-## 后端框架调研
-
-1. express
-2. koa
-
 ## 数据库选型以及 mongoDB 基本操作
 
 ### 非关系型数据库 NOSQL 和 关系型数据库 SQL
@@ -133,4 +121,6 @@ processManagement:
 # 使用配置启动
 mongod --config /usr/local/etc/mongo.conf
 
+# mongo shell 简单命令
+[菜鸟教程](https://www.runoob.com/mongodb/mongodb-create-database.html) 
 ```
