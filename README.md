@@ -51,16 +51,19 @@ $ npm start
    - 代表 文档存储 - MongoDB、key value 存储 - Redis、图存储- Neo4J
 
 ### MongoDB 安装
+
 1. 下载 地址：https://www.mongodb.com/try/download/community
 
 2. 安装的官方文档
-    * macOS 安装使用 homebrew：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
-    * macOS 安装，手动安装:https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x-tarball/
-    * windows 安装：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 
-3. mac安装的两种方式
+   - macOS 安装使用 homebrew：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x/
+   - macOS 安装，手动安装:https://docs.mongodb.com/manual/tutorial/install-mongodb-on-os-x-tarball/
+   - windows 安装：https://docs.mongodb.com/manual/tutorial/install-mongodb-on-windows/
 
-* 手动下载配置, 也适用于 linux：
+3. mac 安装的两种方式
+
+- 手动下载配置, 也适用于 linux：
+
 ```js
 # 进入 /usr/local 安装本地软件的常用位置
 cd /usr/local
@@ -80,7 +83,7 @@ cd mongodb-macos-x86_64-5.0.3/bin
 # 添加到全局命令
 # 4 重命名
 sudo mv mongodb-macos-x86_64-5.0.3  /usr/local/mongodb
-# 5 添加到 $PATH 环境变量 
+# 5 添加到 $PATH 环境变量
 export PATH=/usr/local/mongodb/bin:$PATH
 # 6 运行
 mongod --dbpath /usr/local/var/mongodb
@@ -107,7 +110,7 @@ kill -9 进程对应的pid
 # 文档地址：https://docs.mongodb.com/manual/reference/configuration-options/#std-label-configuration-options
 # 命令行工具参数和配置文件的对应关系：https://docs.mongodb.com/manual/reference/configuration-file-settings-command-line-options-mapping/#std-label-conf-file-command-line-mapping
 
-# 配置文件存放目录 /usr/local/etc 一般的配置文件都会放在这边，比如redis.config 
+# 配置文件存放目录 /usr/local/etc 一般的配置文件都会放在这边，比如redis.config
 
 # 配置示例
 systemLog:
@@ -122,5 +125,105 @@ processManagement:
 mongod --config /usr/local/etc/mongo.conf
 
 # mongo shell 简单命令
-[菜鸟教程](https://www.runoob.com/mongodb/mongodb-create-database.html) 
+[菜鸟教程](https://www.runoob.com/mongodb/mongodb-create-database.html)
 ```
+
+## mongo shell
+### 基础命令
+```js
+# 运行 mongo shell
+mongo
+# 查看当前实例所有数据库
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+# 查看当前使用的数据库
+> db;
+test
+# 切换数据库,直接 use + 新的数据库名称 就可以新建
+> use hello
+# 查看当前数据库中的集合（collections）
+> show collections
+# 在特定 collections 插入数据，db 指的是当前数据库，不存在 collection 名称的时候会自动插入
+> db.user.insertOne({ name: 'viking' })
+# 查找数据, 括号中可以输入特定条件
+> db.user.find()
+> db.user.find({ name: 'viking' })
+# 更新数据
+> db.user.update({ name: 'viking'}, {name: 'lucy'})
+# 删除数据
+> db.user.deleteOne({name: 'lucy'})
+# 退出交互界面
+> exit
+```
+### 查询更新相关操作
+
+[MongoDB 的 commands 列表 ](https://docs.mongodb.com/manual/reference/command/)
+[关于查询返回的 Cursor 对象的文档](https://docs.mongodb.com/drivers/node/current/fundamentals/crud/read-operations/cursor/)
+[Query 条件查询文档](https://docs.mongodb.com/drivers/node/current/fundamentals/crud/query-document/)
+[所有的操作符参考文档](https://docs.mongodb.com/manual/reference/operator/query/)
+
+```js
+// Comparison Operators 比较操作符
+(>) 大于 - $gt
+(<) 小于 - $lt
+(>=) 大于等于 - $gte
+(<= ) 小于等于 - $lte
+(===) 等于 - $eq
+(!==) 不等于 - $neq
+// 格式
+{ age: { $gt : 30 } }
+
+// Logical Operators 逻辑操作符
+逻辑与 - 直接对象中添加多个条件即可, $and
+逻辑或 - $or
+
+// 格式 
+{  age: { $gte: 30 }, name: 'james' }
+// 等于
+{
+   $and: [
+      { age: { $gte: 30 } },
+      { name: 'james' }
+   ]
+}
+{
+   $or: [
+      { age: { $gte: 30 } },
+      { name: 'xiaobao' }
+   ]
+}
+// Element Operators
+$exists: 判断属性是否存在
+$type： 数据类型 所有 types 列表：https://docs.mongodb.com/manual/reference/operator/query/type/#available-types
+格式：{ $exists: true }
+{ $type: 'string'}
+```
+[更新文档](https://docs.mongodb.com/drivers/node/current/fundamentals/crud/write-operations/change-a-document/)
+
+```js
+<!-- Update 操作符 -->
+$set - replaces the value of a field with a specified one, 改变对应的值
+$inc - increments or decrements field values，增加或者减少对应的数字
+$rename - renames fields 重命名
+$unset - removes fields 删除对应的 key
+$mul - multiplies a field value by a specified number 乘法
+
+Update 格式
+{
+   <update operator>: {
+      <field> : {
+         ...
+      },
+      <field> : {
+      }
+   },
+   <update operator>: {
+      ...
+   }
+}
+```
+[数组更新的方式](https://docs.mongodb.com/manual/reference/operator/update-array/)
+[数组检索以及根据检索元素进行更新
+](https://docs.mongodb.com/manual/tutorial/query-arrays/)
